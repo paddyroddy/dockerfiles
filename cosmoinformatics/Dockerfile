@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:18.10
 LABEL maintainer="patrick.roddy.17@ucl.ac.uk"
 # docker build -t cosmoinformatics .
 # docker run -it --rm cosmoinformatics
