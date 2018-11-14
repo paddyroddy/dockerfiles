@@ -16,8 +16,7 @@ ENV S2LET $HOME/s2let
 
 # Basic compilers and tools dependencies
 RUN apt-get update -y && apt-get install -y \
-    gcc g++ gfortran wget make git cmake build-essential \
-    libcfitsio-dev libfftw3-dev
+    gcc g++ gfortran wget make git cmake build-essential
 
 # Simple install of python
 RUN apt-get install -y python python-pip python-dev python-tk \
