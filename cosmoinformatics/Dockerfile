@@ -19,7 +19,7 @@ RUN apt-get update -y && apt-get install -y \
     gcc g++ gfortran wget make git cmake build-essential
 
 # Simple install of python
-RUN apt-get install -y python python-pip python-dev python-tk \
+RUN apt-get install -y python3 python3-pip python3-dev \
     && apt-get clean all
 
 # CFITSIO
@@ -51,7 +51,7 @@ RUN echo \
 WORKDIR $HOME
 
 # python
-RUN pip install numpy Cython==0.27.3 matplotlib scipy healpy
+RUN pip3 install numpy Cython==0.27.3 matplotlib scipy healpy
 
 # private repos
 RUN mkdir /root/.ssh/
@@ -62,7 +62,7 @@ RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 # SSHT
 RUN git clone git@github.com:astro-informatics/src_ssht.git ssht
 WORKDIR $SSHT
-RUN make && python setup.py build_ext --inplace
+RUN make && python3 setup.py build_ext --inplace
 WORKDIR $HOME
 
 # SO3
@@ -79,7 +79,7 @@ RUN cmake .. -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
     -DSsht_LIBRARY=$SSHT/lib/c/libssht.a -DSo3_INCLUDE_DIR=$SO3/src/c/ \
     -DSo3_LIBRARY=$SO3/lib/c/libso3.a -Dtests=OFF && make clean all
 WORKDIR $S2LET
-RUN python setup.py build_ext --inplace
+RUN python3 setup.py build_ext --inplace
 WORKDIR $HOME
 
 # cleanup
