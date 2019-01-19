@@ -16,7 +16,7 @@ ENV S2LET $HOME/s2let
 
 # Basic compilers and tools dependencies
 RUN apt-get update -y && apt-get install -y \
-    gcc g++ gfortran wget make git cmake build-essential
+    gcc g++ gfortran wget make git cmake build-essential vim
 
 # Simple install of python
 RUN apt-get install -y python3 python3-pip python3-dev \
@@ -47,7 +47,7 @@ WORKDIR $HEALPIX
 RUN echo \
     "3\ngfortran\n\nY\n\n\ngcc\n\n\n\n\nN\n1\nY\nN\nN\n0\n" | ./configure \
     && make
-    # 3 gfortran ↵ ↵ ↵ ↵ ↵ ↵ ↵ ↵ N ↵ Y N
+# 3 gfortran ↵ ↵ ↵ ↵ ↵ ↵ ↵ ↵ N ↵ Y N
 WORKDIR $HOME
 
 # python
@@ -60,22 +60,28 @@ RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 # SSHT
-RUN git clone git@github.com:astro-informatics/src_ssht.git ssht
+RUN git clone git@github.com:astro-informatics/src_ssht.git $SSHT \
+    && mkdir $SSHT/build
+WORKDIR $SSHT/build
+RUN cmake $SSHT && make clean all
 WORKDIR $SSHT
-RUN make && python3 setup.py build_ext --inplace
+RUN python3 setup.py build_ext --inplace
 WORKDIR $HOME
 
 # SO3
-RUN git clone git@github.com:astro-informatics/src_so3.git so3
-WORKDIR $SO3
-RUN make
+RUN git clone git@github.com:astro-informatics/src_so3.git $SO3 \
+    && mkdir $SO3/build
+WORKDIR $SO3/build
+RUN cmake $SO3 -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
+    -DSsht_LIBRARY=$SSHT/lib/c/libssht.a -Dtests=OFF \
+    && make clean all
 WORKDIR $HOME
 
 # S2LET
-RUN git clone git@github.com:astro-informatics/src_s2let.git s2let
-RUN mkdir -p s2let/build
+RUN git clone git@github.com:astro-informatics/src_s2let.git $S2LET \
+    && mkdir $S2LET/build
 WORKDIR $S2LET/build
-RUN cmake .. -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
+RUN cmake $S2LET -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
     -DSsht_LIBRARY=$SSHT/lib/c/libssht.a -DSo3_INCLUDE_DIR=$SO3/src/c/ \
     -DSo3_LIBRARY=$SO3/lib/c/libso3.a -Dtests=OFF && make clean all
 WORKDIR $S2LET
