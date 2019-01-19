@@ -63,7 +63,7 @@ RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 RUN git clone git@github.com:astro-informatics/src_ssht.git $SSHT \
     && mkdir $SSHT/build
 WORKDIR $SSHT/build
-RUN cmake $SSHT && make clean all
+RUN cmake $SSHT -Dtests=OFF && make clean all
 WORKDIR $SSHT
 RUN python3 setup.py build_ext --inplace
 WORKDIR $HOME
@@ -73,7 +73,7 @@ RUN git clone git@github.com:astro-informatics/src_so3.git $SO3 \
     && mkdir $SO3/build
 WORKDIR $SO3/build
 RUN cmake $SO3 -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
-    -DSsht_LIBRARY=$SSHT/lib/c/libssht.a -Dtests=OFF \
+    -DSsht_LIBRARY=$SSHT/build/libssht.a -Dtests=OFF \
     && make clean all
 WORKDIR $HOME
 
@@ -82,8 +82,8 @@ RUN git clone git@github.com:astro-informatics/src_s2let.git $S2LET \
     && mkdir $S2LET/build
 WORKDIR $S2LET/build
 RUN cmake $S2LET -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
-    -DSsht_LIBRARY=$SSHT/lib/c/libssht.a -DSo3_INCLUDE_DIR=$SO3/src/c/ \
-    -DSo3_LIBRARY=$SO3/lib/c/libso3.a -Dtests=OFF && make clean all
+    -DSsht_LIBRARY=$SSHT/build/libssht.a -DSo3_INCLUDE_DIR=$SO3/src/c/ \
+    -DSo3_LIBRARY=$SO3/build/libso3.a -Dtests=OFF && make clean all
 WORKDIR $S2LET
 RUN python3 setup.py build_ext --inplace
 WORKDIR $HOME
