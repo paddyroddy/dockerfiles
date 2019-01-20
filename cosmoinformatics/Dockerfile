@@ -16,7 +16,10 @@ ENV S2LET $HOME/s2let
 
 # Basic compilers and tools dependencies
 RUN apt-get update -y && apt-get install -y \
-    gcc g++ gfortran wget make git cmake build-essential vim
+    gcc g++ gfortran wget make git cmake build-essential
+
+# Unessential but useful
+RUN apt-get install -y vim cmake-curses-gui
 
 # Simple install of python
 RUN apt-get install -y python3 python3-pip python3-dev \
