@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # The environment variables
 ENV HOME /home
 ENV CFITSIO /usr
-ENV FFTW /usr
+ENV FFTW /usr/local
 ENV HEALPIX $HOME/Healpix_3.50
 ENV SSHT $HOME/ssht
 ENV SO3 $HOME/so3
