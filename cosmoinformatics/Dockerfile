@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV HOME /home
 ENV CFITSIO /usr
 ENV FFTW /usr
-ENV HEALPIX $HOME/Healpix_3.40
+ENV HEALPIX $HOME/Healpix_3.50
 ENV SSHT $HOME/ssht
 ENV SO3 $HOME/so3
 ENV S2LET $HOME/s2let
@@ -44,8 +44,8 @@ WORKDIR $HOME
 
 # HEALPIX
 RUN wget \
-    https://downloads.sourceforge.net/project/healpix/Healpix_3.40/Healpix_3.40_2018Jun22.tar.gz \
-    && tar xzf Healpix_3.40_2018Jun22.tar.gz && rm Healpix_3.40_2018Jun22.tar.gz
+    https://sourceforge.net/projects/healpix/files/Healpix_3.50/Healpix_3.50_2018Dec10.tar.gz \
+    && tar xzf Healpix_3.50_2018Dec10.tar.gz && rm Healpix_3.50_2018Dec10.tar.gz
 WORKDIR $HEALPIX
 RUN echo \
     "3\ngfortran\n\nY\n\n\ngcc\n\n\n\n\nN\n1\nY\nN\nN\n0\n" | ./configure \
