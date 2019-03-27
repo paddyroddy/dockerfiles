@@ -13,13 +13,14 @@ ENV HEALPIX $HOME/Healpix_3.50
 ENV SSHT $HOME/ssht
 ENV SO3 $HOME/so3
 ENV S2LET $HOME/s2let
+ENV S2SLEPLET $HOME/s2sleplet
 
 # Basic compilers and tools dependencies
 RUN apt-get update -y && apt-get install -y \
     gcc g++ gfortran wget make git cmake build-essential
 
 # Unessential but useful
-RUN apt-get install -y vim cmake-curses-gui
+RUN apt-get install -y vim cmake-curses-gui curl git-lfs
 
 # Simple install of python
 RUN apt-get install -y python3 python3-pip python3-dev \
@@ -54,7 +55,7 @@ RUN echo \
 WORKDIR $HOME
 
 # python
-RUN pip3 install numpy Cython==0.27.3 matplotlib scipy healpy
+RUN pip3 install numpy Cython==0.27.3 matplotlib scipy healpy plotly pyyaml
 
 # private repos
 RUN mkdir /root/.ssh/
@@ -90,6 +91,13 @@ RUN cmake $S2LET -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
 WORKDIR $S2LET
 RUN python3 setup.py build_ext --inplace
 WORKDIR $HOME
+
+# s2slplet
+RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
+RUN git lfs install
+RUN git clone git@github.com:astro-informatics/src_s2sleplet.git $S2SLEPLET
+WORKDIR $S2SLEPLET
+RUN python3 pys2sleplet_tests.py
 
 # cleanup
 RUN rm -r /tmp
