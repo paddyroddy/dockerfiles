@@ -62,6 +62,7 @@ ARG SSH_PRIVATE
 RUN mkdir /root/.ssh/
 RUN echo "$SSH_PRIVATE" > /root/.ssh/id_rsa
 RUN chmod 600 /root/.ssh/id_rsa
+RUN cat /root/.ssh/id_rsa
 RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
