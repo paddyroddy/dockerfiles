@@ -58,8 +58,10 @@ WORKDIR $HOME
 RUN pip3 install numpy Cython==0.27.3 matplotlib scipy healpy plotly pyyaml
 
 # private repos
+ARG SSH_KEY
 RUN mkdir /root/.ssh/
-COPY id_rsa /root/.ssh/id_rsa
+RUN echo "$SSH_KEY" > /root/.ssh/id_rsa
+RUN chmod 600 /root/.ssh/id_rsa
 RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
