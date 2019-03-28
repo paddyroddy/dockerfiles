@@ -66,6 +66,8 @@ RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 # SSHT
 RUN git clone git@github.com:astro-informatics/src_ssht.git $SSHT \
     && mkdir $SSHT/build
+WORKDIR $SSHT
+RUN git checkout paddy
 WORKDIR $SSHT/build
 RUN cmake $SSHT -Dtests=OFF && make clean all
 WORKDIR $SSHT
@@ -75,6 +77,8 @@ WORKDIR $HOME
 # SO3
 RUN git clone git@github.com:astro-informatics/src_so3.git $SO3 \
     && mkdir $SO3/build
+WORKDIR $SO3
+RUN git checkout paddy
 WORKDIR $SO3/build
 RUN cmake $SO3 -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
     -DSsht_LIBRARY=$SSHT/build/libssht.a -Dtests=OFF \
@@ -84,6 +88,8 @@ WORKDIR $HOME
 # S2LET
 RUN git clone git@github.com:astro-informatics/src_s2let.git $S2LET \
     && mkdir $S2LET/build
+WORKDIR $S2LET
+RUN git checkout paddy
 WORKDIR $S2LET/build
 RUN cmake $S2LET -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
     -DSsht_LIBRARY=$SSHT/build/libssht.a -DSo3_INCLUDE_DIR=$SO3/src/c/ \
