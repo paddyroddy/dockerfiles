@@ -1,0 +1,1 @@
+docker build --build-arg SSH_PRIVATE=$SSH_PRIVATE -t $IMAGE_NAME .
