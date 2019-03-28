@@ -61,14 +61,13 @@ RUN apt-get update -y && apt-get install -y \
 ARG SSH_PRIVATE
 RUN mkdir /root/.ssh/
 RUN echo "$SSH_PRIVATE" > /root/.ssh/id_rsa
-RUN chmod 600 /root/.ssh/id_rsa
-RUN cat /root/.ssh/id_rsa
-RUN touch /root/.ssh/known_hosts
-RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+# RUN chmod 600 /root/.ssh/id_rsa
+# RUN touch /root/.ssh/known_hosts
+# RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
-# SSHT
-RUN git clone git@github.com:astro-informatics/src_ssht.git $SSHT \
-    && mkdir $SSHT/build
+# # SSHT
+# RUN git clone git@github.com:astro-informatics/src_ssht.git $SSHT \
+#     && mkdir $SSHT/build
 # WORKDIR $SSHT
 # RUN git checkout paddy
 # WORKDIR $SSHT/build
