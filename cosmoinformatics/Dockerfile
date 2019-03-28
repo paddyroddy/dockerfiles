@@ -103,6 +103,8 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
 RUN git lfs install
 RUN git clone git@github.com:astro-informatics/src_s2sleplet.git $S2SLEPLET
 WORKDIR $S2SLEPLET
+# https://stackoverflow.com/questions/45679844/travis-ci-running-on-docker-image-switch-to-last-comited-branch
+RUN git checkout $(git branch --sort=-committerdate | awk -F " " /*/'{print $2}')
 RUN python3 pys2sleplet_tests.py
 
 # cleanup
