@@ -1,4 +1,4 @@
-FROM ubuntu AS stage1
+FROM alpine AS stage1
 MAINTAINER paddyroddy.github.io
 
 # The environment variables
@@ -9,10 +9,10 @@ ENV S2LET $HOME/s2let
 ENV S2SLEPLET $HOME/s2sleplet
 
 # install git
-RUN apt-get update && apt-get install -y \
+RUN apk --no-cache add -t .build-dep \
     git \
-    git-lfs
-RUN git lfs install
+    git-lfs \
+    openssh-client && git lfs install
 
 # private repos
 ARG SSH_PRIVATE
@@ -40,15 +40,18 @@ RUN git checkout paddy
 # s2let
 RUN git clone git@github.com:astro-informatics/src_s2sleplet.git $S2SLEPLET
 
+# clean
+RUN apk del .build-dep
+
 # -----------------------------------------------------------
 # multistage
-FROM ubuntu AS stage2
+FROM alpine AS stage2
 
 # The environment variables
 ENV HOME /home
 
 # install wget
-RUN apt-get update && apt-get install -y \
+RUN apk --no-cache add -t .build-dep \
     wget
 
 # CFITSIO
@@ -69,9 +72,12 @@ RUN wget \
    && tar xzf Healpix*.tar.gz && rm Healpix*.tar.gz \
    && mv Healpix* $(echo Healpix* | awk -F'[_]' '{print $1}')
 
+# clean
+RUN apk del .build-dep
+
 # -----------------------------------------------------------
-# multistage
-FROM ubuntu AS stage3
+# final stage
+FROM alpine
 
 # copy from previous builds
 COPY --from=stage1 /home/ssht /home/ssht
@@ -84,6 +90,8 @@ COPY --from=stage2 /home/Healpix /home/Healpix
 
 # The environment variables
 ENV HOME /home
+ENV CFITSIO /usr
+ENV FFTW /usr/local
 ENV HEALPIX $HOME/Healpix
 ENV SSHT $HOME/ssht
 ENV SO3 $HOME/so3
@@ -91,11 +99,28 @@ ENV S2LET $HOME/s2let
 ENV S2SLEPLET $HOME/s2sleplet
 
 # install dependencies
-RUN apt-get update && apt-get install -y \
+RUN apk --no-cache add \
+    python3 \
+    py3-pip && apk --no-cache add -t .build-dep \
+    build-base \
     cmake \
+    freetype-dev \
+    g++ \
     gcc \
     gfortran \
-    make
+    libpng-dev \
+    make \
+    musl-dev \
+    openblas-dev \
+    python3-dev
+
+# config python
+RUN ln -sf /usr/bin/python3 /usr/bin/python \
+    && ln -sf /usr/bin/pip3 /usr/bin/pip \
+    && ln -sf /usr/include/locale.h /usr/include/xlocale.h
+
+COPY requirements.txt /
+RUN pip install -r /requirements.txt
 
 # CFITSIO
 WORKDIR $HOME/cfitsio
@@ -112,7 +137,7 @@ RUN rm -r $HOME/fftw
 
 # HEALPIX
 WORKDIR $HEALPIX
-RUN echo \
+RUN /bin/echo -e \
     "3\ngfortran\n\nY\n\n\ngcc\n\n\n\n\nN\n1\nY\nN\nN\n0\n" | ./configure \
     && make
 
@@ -136,43 +161,16 @@ RUN cmake $S2LET -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
     -DSsht_LIBRARY=$SSHT/build/libssht.a -DSo3_INCLUDE_DIR=$SO3/src/c/ \
     -DSo3_LIBRARY=$SO3/build/libso3.a -Dtests=OFF && make clean all
 
-# -----------------------------------------------------------
-# final multibuild
-FROM ubuntu
-
-# copy from previous builds
-COPY --from=stage3 /usr /usr
-COPY --from=stage3 /home/ssht /home/ssht
-COPY --from=stage3 /home/so3 /home/so3
-COPY --from=stage3 /home/s2let /home/s2let
-COPY --from=stage3 /home/s2sleplet /home/s2sleplet
-COPY --from=stage3 /home/Healpix /home/Healpix
-
-# The environment variables
-ENV HOME /home
-ENV CFITSIO /usr
-ENV FFTW /usr/local
-ENV HEALPIX $HOME/Healpix
-ENV SSHT $HOME/ssht
-ENV SO3 $HOME/so3
-ENV S2LET $HOME/s2let
-ENV S2SLEPLET $HOME/s2sleplet
-
-# install python
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip
-
-# python packages
-RUN pip3 install numpy Cython==0.27.3 matplotlib scipy healpy plotly pyyaml
-
 # ssht
 WORKDIR $SSHT
-RUN python3 setup.py build_ext --inplace
+RUN python setup.py build_ext --inplace
 
 # s2let
 WORKDIR $S2LET
-RUN python3 setup.py build_ext --inplace
+RUN python setup.py build_ext --inplace
 
 # s2slplet
 WORKDIR $S2SLEPLET
+
+# clean
+RUN apk del .build-dep

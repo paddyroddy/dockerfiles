@@ -1,0 +1,7 @@
+Cython==0.27.3
+healpy
+numpy
+matplotlib
+plotly
+pyyaml
+scipy
