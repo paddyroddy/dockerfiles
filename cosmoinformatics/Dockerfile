@@ -77,7 +77,7 @@ RUN apk del .build-dep
 
 # -----------------------------------------------------------
 # final stage
-FROM alpine
+FROM ubuntu
 
 # copy from previous builds
 COPY --from=stage1 /home/ssht /home/ssht
@@ -99,28 +99,16 @@ ENV S2LET $HOME/s2let
 ENV S2SLEPLET $HOME/s2sleplet
 
 # install dependencies
-RUN apk --no-cache add \
-    python3 \
-    py3-pip && apk --no-cache add -t .build-dep \
-    build-base \
+RUN apt-get update && apt-get install -y \
     cmake \
-    freetype-dev \
     g++ \
     gcc \
     gfortran \
-    libpng-dev \
     make \
-    musl-dev \
-    openblas-dev \
-    python3-dev
-
-# config python
-RUN ln -sf /usr/bin/python3 /usr/bin/python \
-    && ln -sf /usr/bin/pip3 /usr/bin/pip \
-    && ln -sf /usr/include/locale.h /usr/include/xlocale.h
-
-COPY requirements.txt /
-RUN pip install -r /requirements.txt
+    python3 \
+    python3-dev \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
 
 # CFITSIO
 WORKDIR $HOME/cfitsio
@@ -161,6 +149,13 @@ RUN cmake $S2LET -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
     -DSsht_LIBRARY=$SSHT/build/libssht.a -DSo3_INCLUDE_DIR=$SO3/src/c/ \
     -DSo3_LIBRARY=$SO3/build/libso3.a -Dtests=OFF && make clean all
 
+# config python
+RUN ln -sf /usr/bin/python3 /usr/bin/python \
+    && ln -sf /usr/bin/pip3 /usr/bin/pip
+
+COPY requirements.txt /tmp
+RUN pip install -r /tmp/requirements.txt && rm /tmp/requirements.txt
+
 # ssht
 WORKDIR $SSHT
 RUN python setup.py build_ext --inplace
@@ -171,6 +166,3 @@ RUN python setup.py build_ext --inplace
 
 # s2slplet
 WORKDIR $S2SLEPLET
-
-# clean
-RUN apk del .build-dep
