@@ -12,7 +12,8 @@ ENV S2SLEPLET $HOME/s2sleplet
 RUN apk --no-cache add -t .build-dep \
     git \
     git-lfs \
-    openssh-client && git lfs install
+    openssh-client \
+    && git lfs install
 
 # private repos
 ARG SSH_PRIVATE
