@@ -155,7 +155,8 @@ RUN ln -sf /usr/bin/python3 /usr/bin/python \
     && ln -sf /usr/bin/pip3 /usr/bin/pip
 
 COPY requirements.txt /tmp
-RUN pip install -r /tmp/requirements.txt && rm /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt \
+    && rm /tmp/requirements.txt
 
 # ssht
 WORKDIR $SSHT
