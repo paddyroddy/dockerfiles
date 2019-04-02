@@ -135,7 +135,6 @@ RUN /bin/echo -e \
 RUN mkdir $SSHT/build
 WORKDIR $SSHT/build
 RUN cmake .. -Dtests=OFF && make clean all
-WORKDIR $SSHT
 
 # SO3
 RUN mkdir $SO3/build
