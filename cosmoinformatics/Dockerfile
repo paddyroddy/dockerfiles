@@ -132,20 +132,20 @@ RUN /bin/echo -e \
 # SSHT
 RUN mkdir $SSHT/build
 WORKDIR $SSHT/build
-RUN cmake $SSHT -Dtests=OFF && make clean all
+RUN cmake .. -Dtests=OFF && make clean all
 WORKDIR $SSHT
 
 # SO3
 RUN mkdir $SO3/build
 WORKDIR $SO3/build
-RUN cmake $SO3 -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
+RUN cmake .. -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
     -DSsht_LIBRARY=$SSHT/build/libssht.a -Dtests=OFF \
     && make clean all
 
 # S2LET
 RUN mkdir $S2LET/build
 WORKDIR $S2LET/build
-RUN cmake $S2LET -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
+RUN cmake .. -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
     -DSsht_LIBRARY=$SSHT/build/libssht.a -DSo3_INCLUDE_DIR=$SO3/src/c/ \
     -DSo3_LIBRARY=$SO3/build/libso3.a -Dtests=OFF && make clean all
 
