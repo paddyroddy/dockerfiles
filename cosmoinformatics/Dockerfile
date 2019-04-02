@@ -104,6 +104,7 @@ RUN apt-get update && apt-get install -y \
     g++ \
     gcc \
     gfortran \
+    git \
     make \
     python3 \
     python3-dev \
