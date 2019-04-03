@@ -1,2 +1,6 @@
 Cython==0.27.3
+matplotlib
 numpy
+plotly
+pyyaml
+scipy
