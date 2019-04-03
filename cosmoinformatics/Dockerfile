@@ -6,7 +6,6 @@ ENV HOME /home
 ENV SSHT $HOME/ssht
 ENV SO3 $HOME/so3
 ENV S2LET $HOME/s2let
-ENV S2SLEPLET $HOME/s2sleplet
 
 # install git
 RUN apk --no-cache add -t .build-dep \
@@ -37,9 +36,6 @@ RUN git checkout paddy
 RUN git clone git@github.com:astro-informatics/src_s2let.git $S2LET
 WORKDIR $S2LET
 RUN git checkout paddy
-
-# s2let
-RUN git clone git@github.com:astro-informatics/src_s2sleplet.git $S2SLEPLET
 
 # clean
 RUN apk del .build-dep
@@ -84,7 +80,6 @@ FROM ubuntu
 COPY --from=stage1 /home/ssht /home/ssht
 COPY --from=stage1 /home/so3 /home/so3
 COPY --from=stage1 /home/s2let /home/s2let
-COPY --from=stage1 /home/s2sleplet /home/s2sleplet
 COPY --from=stage2 /home/cfitsio /home/cfitsio
 COPY --from=stage2 /home/fftw /home/fftw
 COPY --from=stage2 /home/Healpix /home/Healpix
@@ -97,7 +92,6 @@ ENV HEALPIX $HOME/Healpix
 ENV SSHT $HOME/ssht
 ENV SO3 $HOME/so3
 ENV S2LET $HOME/s2let
-ENV S2SLEPLET $HOME/s2sleplet
 
 # install dependencies
 RUN apt-get update && apt-get install -y \
@@ -105,14 +99,11 @@ RUN apt-get update && apt-get install -y \
     g++ \
     gcc \
     gfortran \
-    git \
-    git-lfs \
     make \
     python3 \
     python3-dev \
     python3-pip \
-    && rm -rf /var/lib/apt/lists/* \
-    && git lfs intall
+    && rm -rf /var/lib/apt/lists/*
 
 # CFITSIO
 WORKDIR $HOME/cfitsio
@@ -156,6 +147,7 @@ RUN cmake .. -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
 RUN ln -sf /usr/bin/python3 /usr/bin/python \
     && ln -sf /usr/bin/pip3 /usr/bin/pip
 
+# install packages
 COPY requirements.txt /tmp
 RUN pip install --no-cache-dir -r /tmp/requirements.txt \
     && rm /tmp/requirements.txt
@@ -168,5 +160,5 @@ RUN python setup.py build_ext --inplace
 WORKDIR $S2LET
 RUN python setup.py build_ext --inplace
 
-# s2slplet
-WORKDIR $S2SLEPLET
+# home
+WORKDIR $HOME
