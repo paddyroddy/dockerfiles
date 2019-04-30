@@ -75,9 +75,9 @@ RUN apk del .build-dep
 FROM ubuntu
 
 # copy from previous builds
-COPY --from=stage1 /home/ssht /home/ssht
-COPY --from=stage1 /home/so3 /home/so3
-COPY --from=stage1 /home/s2let /home/s2let
+COPY --from=stage1 /home/ssht /home/project/src/ssht
+COPY --from=stage1 /home/so3 /home/project/src/so3
+COPY --from=stage1 /home/s2let /home/project/src/s2let
 COPY --from=stage2 /home/cfitsio /home/cfitsio
 COPY --from=stage2 /home/fftw /home/fftw
 COPY --from=stage2 /home/Healpix /home/Healpix
@@ -87,9 +87,9 @@ ENV HOME /home
 ENV CFITSIO /usr
 ENV FFTW /usr/local
 ENV HEALPIX $HOME/Healpix
-ENV SSHT $HOME/ssht
-ENV SO3 $HOME/so3
-ENV S2LET $HOME/s2let
+ENV SSHT $HOME/project/src/ssht
+ENV SO3 $HOME/project/src/so3
+ENV S2LET $HOME/project/src/s2let
 
 # install dependencies
 RUN apt-get update && apt-get install -y \
