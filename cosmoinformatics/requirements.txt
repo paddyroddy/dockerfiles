@@ -1,4 +1,5 @@
 Cython==0.27.3
+cmocean
 matplotlib
 numpy
 plotly
