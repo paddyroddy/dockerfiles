@@ -94,7 +94,6 @@ ENV S2LET $HOME/project/src/s2let
 
 # install dependencies
 RUN apt-get update && apt-get install -y \
-    cmake \
     g++ \
     gcc \
     gfortran \
@@ -123,6 +122,12 @@ RUN /bin/echo -e \
     "3\ngfortran\n\nY\n\n\ngcc\n\n\n\n\nN\n1\nY\nN\nN\n0\n" | ./configure \
     && make
 
+# CMAKE>=3.12
+ADD https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh /cmake.sh
+RUN mkdir /opt/cmake
+RUN sh /cmake.sh --prefix=/opt/cmake --skip-license
+RUN ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake
+
 # SSHT
 RUN mkdir $SSHT/build
 WORKDIR $SSHT/build
@@ -132,14 +137,14 @@ RUN cmake .. -Dtests=OFF && make clean all
 RUN mkdir $SO3/build
 WORKDIR $SO3/build
 RUN cmake .. -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
-    -DSsht_LIBRARY=$SSHT/build/libssht.a -Dtests=OFF \
+    -DSsht_LIBRARY=$SSHT/build/src/c/libssht.a -Dtests=OFF \
     && make clean all
 
 # S2LET
 RUN mkdir $S2LET/build
 WORKDIR $S2LET/build
 RUN cmake .. -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
-    -DSsht_LIBRARY=$SSHT/build/libssht.a -DSo3_INCLUDE_DIR=$SO3/src/c/ \
+    -DSsht_LIBRARY=$SSHT/build/src/c/libssht.a -DSo3_INCLUDE_DIR=$SO3/src/c/ \
     -DSo3_LIBRARY=$SO3/build/libso3.a -Dtests=OFF && make clean all
 
 # config python
@@ -153,7 +158,7 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt \
 
 # ssht
 WORKDIR $SSHT
-RUN python setup.py build_ext --inplace
+RUN pip install .
 
 # s2let
 WORKDIR $S2LET
