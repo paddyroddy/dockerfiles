@@ -101,6 +101,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-dev \
     python3-pip \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # CFITSIO
@@ -123,9 +124,9 @@ RUN /bin/echo -e \
     && make
 
 # CMAKE>=3.12
-ADD https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh /cmake.sh
+RUN wget -O /tmp/cmake.sh https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh
 RUN mkdir /opt/cmake
-RUN sh /cmake.sh --prefix=/opt/cmake --skip-license
+RUN sh /tmp/cmake.sh --prefix=/opt/cmake --skip-license
 RUN ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake
 
 # SSHT
