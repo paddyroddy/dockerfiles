@@ -8,3 +8,4 @@ plotly
 scipy
 typing
 scikit-build
+six
