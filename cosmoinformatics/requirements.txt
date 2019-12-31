@@ -1,7 +1,6 @@
 conan
 Cython==0.27.3
 cmocean
-dataclasses
 matplotlib
 numpy
 plotly
