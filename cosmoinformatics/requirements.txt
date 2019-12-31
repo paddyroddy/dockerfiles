@@ -5,6 +5,7 @@ dataclasses
 matplotlib
 numpy
 plotly
+pytest
 scipy
 typing
 scikit-build
