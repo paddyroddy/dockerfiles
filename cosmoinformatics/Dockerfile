@@ -51,7 +51,7 @@ RUN wget http://www.fftw.org/fftw-3.3.8.tar.gz && tar xzf fftw*.tar.gz \
 # HEALPIX
 WORKDIR $HOME
 RUN wget \
-    https://sourceforge.net/projects/healpix/files/Healpix_3.50/Healpix_3.50_2018Dec10.tar.gz \
+    https://sourceforge.net/projects/healpix/files/Healpix_3.60/Healpix_3.60_2019Dec18.tar.gz \
     && tar xzf Healpix*.tar.gz && rm Healpix*.tar.gz \
     && mv Healpix* $(echo Healpix* | awk -F'[_]' '{print $1}')
 
