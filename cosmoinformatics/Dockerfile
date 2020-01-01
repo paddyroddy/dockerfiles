@@ -128,7 +128,8 @@ RUN cmake .. -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
 
 # install packages
 COPY requirements.txt /tmp
-RUN pip install --no-cache-dir -r /tmp/requirements.txt \
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r /tmp/requirements.txt \
     && rm /tmp/requirements.txt
 
 # ssht
