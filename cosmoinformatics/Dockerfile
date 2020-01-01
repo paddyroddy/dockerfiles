@@ -1,5 +1,5 @@
 FROM alpine AS stage1
-MAINTAINER paddyroddy.github.io
+LABEL maintainer="paddyroddy.github.io"
 
 # The environment variables
 ENV HOME /home
@@ -52,21 +52,21 @@ RUN apk --no-cache add -t .build-dep \
 # CFITSIO
 WORKDIR $HOME
 RUN wget \ 
-   http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio_latest.tar.gz \
-   && tar xzf cfitsio_latest.tar.gz && rm cfitsio_latest.tar.gz \
-   && mv cfitsio* $(echo cfitsio* | awk -F'[-]' '{print $1}')
+    http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio_latest.tar.gz \
+    && tar xzf cfitsio_latest.tar.gz && rm cfitsio_latest.tar.gz \
+    && mv cfitsio* $(echo cfitsio* | awk -F'[-]' '{print $1}')
 
 #FFTW
 WORKDIR $HOME
 RUN wget http://www.fftw.org/fftw-3.3.8.tar.gz && tar xzf fftw*.tar.gz \
-	&& rm fftw*.tar.gz && mv fftw* $(echo fftw* | awk -F'[-]' '{print $1}')
+    && rm fftw*.tar.gz && mv fftw* $(echo fftw* | awk -F'[-]' '{print $1}')
 
 # HEALPIX
 WORKDIR $HOME
 RUN wget \
-   https://sourceforge.net/projects/healpix/files/Healpix_3.50/Healpix_3.50_2018Dec10.tar.gz \
-   && tar xzf Healpix*.tar.gz && rm Healpix*.tar.gz \
-   && mv Healpix* $(echo Healpix* | awk -F'[_]' '{print $1}')
+    https://sourceforge.net/projects/healpix/files/Healpix_3.50/Healpix_3.50_2018Dec10.tar.gz \
+    && tar xzf Healpix*.tar.gz && rm Healpix*.tar.gz \
+    && mv Healpix* $(echo Healpix* | awk -F'[_]' '{print $1}')
 
 # clean
 RUN apk del .build-dep
