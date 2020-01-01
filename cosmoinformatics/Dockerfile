@@ -60,7 +60,7 @@ RUN apk del .build-dep
 
 # -----------------------------------------------------------
 # final stage
-FROM ubuntu
+FROM python:slim
 
 # copy from previous builds
 COPY --from=stage1 /home/ssht /home/project/src/ssht
@@ -85,9 +85,6 @@ RUN apt-get update && apt-get install -y \
     gcc \
     gfortran \
     make \
-    python3 \
-    python3-dev \
-    python3-pip \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
@@ -134,10 +131,6 @@ WORKDIR $S2LET/build
 RUN cmake .. -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
     -DSsht_LIBRARY=$SSHT/build/src/c/libssht.a -DSo3_INCLUDE_DIR=$SO3/src/c/ \
     -DSo3_LIBRARY=$SO3/build/libso3.a -Dtests=OFF && make clean all
-
-# config python
-RUN ln -sf /usr/bin/python3 /usr/bin/python \
-    && ln -sf /usr/bin/pip3 /usr/bin/pip
 
 # install packages
 COPY requirements.txt /tmp
