@@ -10,7 +10,8 @@ ENV S2LET $HOME/s2let
 # install git
 RUN apk --no-cache add -t .build-dep \
     git \
-    openssh-client
+    openssh-client \
+    wget
 
 # private repos
 ARG SSH_PRIVATE
@@ -34,20 +35,6 @@ RUN git checkout paddy
 RUN git clone git@github.com:astro-informatics/src_s2let.git $S2LET
 WORKDIR $S2LET
 RUN git checkout paddy
-
-# clean
-RUN apk del .build-dep
-
-# -----------------------------------------------------------
-# multistage
-FROM alpine AS stage2
-
-# The environment variables
-ENV HOME /home
-
-# install wget
-RUN apk --no-cache add -t .build-dep \
-    wget
 
 # CFITSIO
 WORKDIR $HOME
@@ -79,9 +66,9 @@ FROM ubuntu
 COPY --from=stage1 /home/ssht /home/project/src/ssht
 COPY --from=stage1 /home/so3 /home/project/src/so3
 COPY --from=stage1 /home/s2let /home/project/src/s2let
-COPY --from=stage2 /home/cfitsio /home/cfitsio
-COPY --from=stage2 /home/fftw /home/fftw
-COPY --from=stage2 /home/Healpix /home/Healpix
+COPY --from=stage1 /home/cfitsio /home/cfitsio
+COPY --from=stage1 /home/fftw /home/fftw
+COPY --from=stage1 /home/Healpix /home/Healpix
 
 # The environment variables
 ENV HOME /home
