@@ -1,7 +1,7 @@
 FROM alpine AS stage1
 LABEL maintainer="paddyroddy.github.io"
 
-# The environment variables
+# environment variables
 ENV HOME /home
 ENV SSHT $HOME/ssht
 ENV SO3 $HOME/so3
@@ -43,7 +43,7 @@ RUN wget \
     && tar xzf cfitsio_latest.tar.gz && rm cfitsio_latest.tar.gz \
     && mv cfitsio* $(echo cfitsio* | awk -F'[-]' '{print $1}')
 
-#FFTW
+# FFTW
 WORKDIR $HOME
 RUN wget http://www.fftw.org/fftw-3.3.8.tar.gz && tar xzf fftw*.tar.gz \
     && rm fftw*.tar.gz && mv fftw* $(echo fftw* | awk -F'[-]' '{print $1}')
@@ -107,8 +107,8 @@ RUN rm -r $HOME/fftw
 # HEALPIX
 WORKDIR $HEALPIX
 RUN /bin/echo -e \
-    "3\ngfortran\n\nY\n\n\ngcc\n\n\n\n\nN\n1\nY\nN\nN\n0\n" | ./configure \
-    && make
+    "3\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ny\n\n" | ./configure \
+    && make -j
 
 # CMAKE>=3.12
 RUN wget -O /tmp/cmake.sh https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh
