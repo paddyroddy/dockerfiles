@@ -81,6 +81,7 @@ ENV S2LET $HOME/project/src/s2let
 
 # install dependencies
 RUN apt-get update && apt-get install -y \
+    cmake \
     g++ \
     gcc \
     gfortran \
@@ -105,13 +106,7 @@ RUN rm -r $HOME/fftw
 WORKDIR $HEALPIX
 RUN /bin/echo -e \
     "3\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ny\n\n" | ./configure \
-    && make -j
-
-# CMAKE>=3.12
-RUN wget -O /tmp/cmake.sh https://cmake.org/files/v3.15/cmake-3.15.3-Linux-x86_64.sh
-RUN mkdir /opt/cmake
-RUN sh /tmp/cmake.sh --prefix=/opt/cmake --skip-license
-RUN ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake
+    && make
 
 # SSHT
 RUN mkdir $SSHT/build
