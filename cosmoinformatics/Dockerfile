@@ -126,12 +126,6 @@ RUN cmake .. -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
     -DSsht_LIBRARY=$SSHT/build/src/c/libssht.a -DSo3_INCLUDE_DIR=$SO3/src/c/ \
     -DSo3_LIBRARY=$SO3/build/libso3.a -Dtests=OFF && make clean all
 
-# install packages
-COPY requirements.txt /tmp
-RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r /tmp/requirements.txt \
-    && rm /tmp/requirements.txt
-
 # ssht
 WORKDIR $SSHT
 RUN pip install .
