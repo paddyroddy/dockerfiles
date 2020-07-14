@@ -90,13 +90,13 @@ RUN apt-get update && apt-get install -y \
 
 # CFITSIO
 WORKDIR $HOME/cfitsio
-RUN ./configure --prefix=/usr && make && make install
+RUN bash configure --prefix=/usr && make && make install
 WORKDIR $HOME
 RUN rm -r $HOME/cfitsio
 
 # FFTW
 WORKDIR $HOME/fftw
-RUN ./configure --prefix=/usr --enable-shared --with-pic && make \
+RUN bash configure --prefix=/usr --enable-shared --with-pic && make \
     && make install
 WORKDIR $HOME
 RUN rm -r $HOME/fftw
