@@ -80,7 +80,8 @@ ENV SO3 $HOME/project/src/so3
 ENV S2LET $HOME/project/src/s2let
 
 # install dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends \
     cmake \
     g++ \
     gcc \
