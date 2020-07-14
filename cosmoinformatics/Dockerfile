@@ -85,9 +85,6 @@ RUN apt-get update && apt-get install -y \
     g++ \
     gcc \
     gfortran \
-    libgmp-dev \
-    libmpc-dev \
-    libmpfr-dev \
     make \
     && rm -rf /var/lib/apt/lists/*
 
@@ -107,7 +104,7 @@ RUN rm -r $HOME/fftw
 # HEALPIX
 WORKDIR $HEALPIX
 RUN /bin/echo -e \
-    "3\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ny\n\n" | ./configure \
+    "3\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ny\n\n" | bash configure \
     && make
 
 # SSHT
