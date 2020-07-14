@@ -60,7 +60,7 @@ RUN apk del .build-dep
 
 # -----------------------------------------------------------
 # final stage
-FROM python:slim
+FROM python
 
 # copy from previous builds
 COPY --from=stage1 /home/ssht /home/project/src/ssht
@@ -80,11 +80,15 @@ ENV SO3 $HOME/project/src/so3
 ENV S2LET $HOME/project/src/s2let
 
 # install dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install \
+    -y --no-install-recommends \
     cmake \
     g++ \
     gcc \
     gfortran \
+    libgmp-dev \
+    libmpc-dev \
+    libmpfr-dev \
     make \
     && rm -rf /var/lib/apt/lists/*
 
