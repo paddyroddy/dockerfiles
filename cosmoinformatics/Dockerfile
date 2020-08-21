@@ -86,6 +86,7 @@ RUN apt-get update -qq && \
     g++ \
     gcc \
     gfortran \
+    libmpc-dev \
     libmpfr-dev \
     make \
     && rm -rf /var/lib/apt/lists/*
