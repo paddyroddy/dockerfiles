@@ -124,7 +124,7 @@ RUN cmake .. -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
 RUN mkdir $S2LET/build
 WORKDIR $S2LET/build
 RUN cmake .. -DSsht_INCLUDE_DIR=$SSHT/src/c/ \
-    -DSsht_LIBRARY=$SSHT/build/src/c/libssht.a -DSo3_INCLUDE_DIR=$SO3/src/c/ \
+    -DSsht_LIBRARY=$SSHT/build/src/c/libssht.a -DSo3_INCLUDE_DIR=$SO3/include/ \
     -DSo3_LIBRARY=$SO3/build/libso3.a -Dtests=OFF && make clean all
 
 # ssht
